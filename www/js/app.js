@@ -227,7 +227,7 @@ var app = new Framework7({
           });
 
           $$('#btnsubmit').on('click', function () {
-            app.request.post('http://ubaya.fun/hybrid/160420016/movie_api/newmovie.php',
+            app.request.post('https://ubaya.fun/hybrid/160420016/movie_api/newmovie.php',
               {
                 "title": $$("#tx_title").val(), "homepage": $$("#tx_homepage").val(),
                 "overview": $$("#tx_overview").val(), "release_date": $$("#tx_rdate").val()
