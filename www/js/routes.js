@@ -36,4 +36,8 @@ var routes = [
     path: '/detailmovie2/:id',
     url: './detailmovie2.html',
   },
+  {
+    path: '/newmovie/',
+    url: './newmovie.html',
+  },
 ];
