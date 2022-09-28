@@ -203,6 +203,7 @@ var app = new Framework7({
               $$("#judul").html(detail_movie[0]["title"]);
               $$("#overview").html(detail_movie[0]["overview"]);
               $$("#url").html("<a href='" + detail_movie[0]["homepage"] + "'>" + detail_movie[0]["homepage"] + "</a>");
+              $$('#foot').html("<a href='/editmovie/" + detail_movie[0]["movie_id"] + "' class='button button-fill'>Edit</a>")
 
               var genres = detail_movie["genres"];
 
@@ -235,9 +236,82 @@ var app = new Framework7({
               function (data) {
                 var arr = JSON.parse(data);
                 var result = arr['result'];
-                if (result == 'success')
+                if (result == 'success') {
                   app.dialog.alert('Sukses menambah data');
-                else app.dialog.alert('Gagal menambah data');
+                  app.view.main.router.navigate('/editmovie/' + arr['id'],
+                    {
+                      reloadCurrent: true,
+                      pushState: false
+                    });
+                } else app.dialog.alert('Gagal menambah data');
+              });
+          });
+        }
+
+        if (page.name == 'editmovie') {
+          var id = page.router.currentRoute.params.id;
+          app.request.post("https://ubaya.fun/hybrid/160420016/movie_api/movie_detail.php",
+            { "movie_id": id },
+            function (data) {
+              var arr = JSON.parse(data);
+              movie = arr['data'];
+              $$('#edit_tx_title').val(movie[0]["title"]);
+              $$('#edit_tx_homepage').val(movie[0]["homepage"]);
+              $$('#edit_tx_overview').html(movie[0]["overview"]);
+              $$('#edit_tx_rdate').val(movie[0]["release_date"]);
+              genres = movie['genres'];
+              for (i = 0; i < genres.length; i++) {
+                $$('#ul_genre').append("<li>" +
+                  genres[i]['genre_name'] + "</li>");
+              }
+            }
+          );
+
+          app.request.post("https://ubaya.fun/hybrid/160420016/movie_api/genrelist.php", {},
+            function (data) {
+              var arr = JSON.parse(data);
+              genres = arr['data'];
+              $$("#sel_genre").append(
+                "<option value=''>-tambah genre-</option>");
+              for (var i = 0; i < genres.length; i++) {
+                $$("#sel_genre").append(
+                  "<option value='" + genres[i]['genre_id'] + "'>" +
+                  genres[i]['genre_name'] + "</option>");
+              }
+            });
+
+          $$('#sel_genre').on('change', function () {
+            var genre = $$('#sel_genre :checked').text();
+            $$('#ul_genre').append("<li>" + genre + "</li> ");
+            app.request.post("https://ubaya.fun/hybrid/160420016/movie_api/addmoviegenre.php",
+              { "movie_id": id, 'genre_id': $$('#sel_genre').val() },
+              function (data) {
+                var arr = JSON.parse(data);
+                if (arr['result'] == 'success') {
+                  $$('#sel_genre').val('');
+                }
+              });
+          }
+          );
+
+          $$('#edit_btnsubmit').on('click', function () {
+            app.request.post('https://ubaya.fun/hybrid/160420016/movie_api/editmovie.php',
+              {
+                "movie_id": id,
+                "title": $$("#edit_tx_title").val(), "homepage": $$("#edit_tx_homepage").val(),
+                "overview": $$("#edit_tx_overview").val(), "release_date": $$("#edit_tx_rdate").val()
+              },
+              function (data) {
+                var arr = JSON.parse(data);
+                var result = arr['result'];
+                if (result == 'success') {
+                  app.dialog.alert('Sukses mengubah data');
+                  app.view.main.router.navigate('/detailmovie2/' + arr['id'],
+                    {
+                      reloadCurrent: true,
+                      pushState: false
+                    });
+                } else app.dialog.alert('Gagal mengubah data');
               });
           });
         }
