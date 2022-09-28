@@ -40,4 +40,8 @@ var routes = [
     path: '/newmovie/',
     url: './newmovie.html',
   },
+  {
+    path: '/editmovie/:id',
+    url: './editmovie.html',
+  },
 ];
