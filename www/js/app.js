@@ -218,6 +218,30 @@ var app = new Framework7({
             }
           );
         }
+
+        if (page.name == 'newmovie') {
+          app.calendar.create({
+            inputEl: '#tx_rdate',
+            closeOnSelect: true,
+            dateFormat: "yyyy-mm-dd"
+          });
+
+          $$('#btnsubmit').on('click', function () {
+            app.request.post('http://ubaya.fun/hybrid/160420016/movie_api/newmovie.php',
+              {
+                "title": $$("#tx_title").val(), "homepage": $$("#tx_homepage").val(),
+                "overview": $$("#tx_overview").val(), "release_date": $$("#tx_rdate").val()
+              },
+              function (data) {
+                var arr = JSON.parse(data);
+                var result = arr['result'];
+                if (result == 'success')
+                  app.dialog.alert('Sukses menambah data');
+                else app.dialog.alert('Gagal menambah data');
+              });
+          });
+        }
+
       });
     },
   },
