@@ -203,7 +203,7 @@ var app = new Framework7({
               $$("#judul").html(detail_movie[0]["title"]);
               $$("#overview").html(detail_movie[0]["overview"]);
               $$("#url").html("<a href='" + detail_movie[0]["homepage"] + "'>" + detail_movie[0]["homepage"] + "</a>");
-              $$('#foot').html("<a href='/editmovie/" + detail_movie[0]["movie_id"] + "' class='button button-fill'>Edit</a>")
+              $$('#foot').html("<a href='/editmovie/" + detail_movie[0]["movie_id"] + "' class='button button-fill'>Edit</a>");
 
               var genres = detail_movie["genres"];
 
@@ -217,6 +217,24 @@ var app = new Framework7({
                 $$("#cast").append("<li>" + casts[i]["person_name"] + " as " + casts[i]["character_name"] + "</li>");
               }
             }
+          );
+
+          $$('#btndeletemovie').on('click', function() {
+            app.request.post('https://ubaya.fun/hybrid/160420016/movie_api/deletemovie.php',
+            {"movie_id":id},
+            function (data) {
+              var arr = JSON.parse(data);
+              var result = arr['result'];
+              if (result == 'success') {
+                app.dialog.alert('Sukses menghapus data');
+                app.view.main.router.navigate('/popularmovies/',
+                  {
+                    reloadCurrent: true,
+                    pushState: false
+                  });
+              } else app.dialog.alert('Gagal menghapus data');
+            });
+          }
           );
         }
 
