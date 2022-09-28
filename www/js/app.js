@@ -198,19 +198,35 @@ var app = new Framework7({
           {'movie_id': id},
           function(data) {
             var arr = JSON.parse(data);
-            var list_movies = arr["data"][0];
+            var detail_movie = arr["data"];
+            
+            $$("#judul").html(detail_movie[0]["title"]);
+            $$("#overview").html(detail_movie[0]["overview"]);
+            $$("#url").html("<a href='" + detail_movie[0]["homepage"] + "'>"+ detail_movie[0]["homepage"] + "</a>");
 
-            $$('#detailmovie2').html(
-              "<div class='block-title'>" + list_movies['title'] + "</div>" +
-              "<div class='card'> <div class='card-content card-content-padding'> "+ list_movies['overview'] +
-              "<br><br> Popularity: " + list_movies['popularity'] +
-              "<br> Revenue: " + list_movies['revenue'] +
-              "<br> Release Date: " + list_movies['release_date'] +
-              "<br> Tagline: " + list_movies['tagline'] +
-              "<br> Budget: $" + list_movies['budget'] +
-              "<br> <a href='" + list_movies['homepage'] + "'>Official Site</a>" +
-              "</div></div>"
-            );
+            var genres = detail_movie["genres"];
+
+            for (i=0; i<genres.length; i++) {
+              $$("#genre").append("<li>"+ genres[i]["genre_name"] +"</li>");
+            }
+
+            var casts = detail_movie["casts"];
+            
+            for (i=0; i<casts.length; i++) {
+              $$("#cast").append("<li>"+ casts[i]["person_name"] + " as " + casts[i]["character_name"] +"</li>");
+            }
+
+            // $$('#detailmovie2').html(
+            //   "<div class='block-title'>" + list_movies['title'] + "</div>" +
+            //   "<div class='card'> <div class='card-content card-content-padding'> "+ list_movies['overview'] +
+            //   "<br><br> Popularity: " + list_movies['popularity'] +
+            //   "<br> Revenue: " + list_movies['revenue'] +
+            //   "<br> Release Date: " + list_movies['release_date'] +
+            //   "<br> Tagline: " + list_movies['tagline'] +
+            //   "<br> Budget: $" + list_movies['budget'] +
+            //   "<br> <a href='" + list_movies['homepage'] + "'>Official Site</a>" +
+            //   "</div></div>"
+            // );
           }
           );
             
